@@ -1,0 +1,70 @@
+C++ Sliding Window brute force
+ParthSahu100
+20
+Nov 19, 2022
+class Solution {
+public:
+    int power (int num, int k){
+        int ans = 1;
+        for (int i = 1; i <= k; i++){
+            ans *= num;
+        }
+        return ans;
+    }
+    int divisorSubstrings(int num, int k) {
+        int count = 0;
+        string s = to_string(num);
+        int i = 0, j = 0;
+        while (j < s.size()){
+            if (j - i + 1 < k){
+                j++;
+            }
+            else if (j - i + 1 == k){
+                string subs = s.substr(i, k);
+                int nums = 0;
+                for (int ele = 0; ele < k; ele++){
+                    int temp = subs[ele] - 48;
+                    nums += temp*power(10, k-ele-1);
+                }
+                if (nums != 0 && num % nums == 0){
+                    count++;
+                }
+                j++;
+                i++;
+            }
+        }
+        return count;
+    }
+};
+
+C2:
+
+class Solution {
+public:
+    int divisorSubstrings(int num, int k) {
+        string str = to_string(num);
+        int i = 0, j = 0, n = str.length();
+        int ind = 0;
+        
+        while(j < n)
+        {
+            if(j - i + 1 < k)
+            {
+                ++j;
+            }
+            else if(j - i + 1 == k)
+            {
+                string s = str.substr(i,k);
+                int n = stoi(s);
+                if(n != 0 && num % n == 0 )
+                    ++ind;
+                
+                ++i;
+                ++j;
+            }
+                
+        }
+        
+        return ind;
+    }
+};
