@@ -1,3 +1,17 @@
+Intuition
+Sliding Window Concept
+
+Approach
+countSubArrs(nums,goal) is a function that counts the subarrays which has sum less than or equal to goal.
+Therefore, countSubArrs(nums,goal)-countSubArrs(nums,goal-1) gives you the count of subarrays that has sum exactly equal to goal;
+
+The j to i window represents the subarrays. We use the i pointer to expand the window, when the sum of all numbers in the window is bigger than goal, it's time for us to move the j pointer to shorten the window. Through this process, we can count the number of the subarrays.
+
+Complexity
+Time complexity:O(N)
+Space complexity:O(1)
+Code
+
 class Solution {
 public:
     int numSubarraysWithSum(vector<int>& nums, int goal) {
