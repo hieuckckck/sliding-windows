@@ -1,0 +1,60 @@
+class Solution {
+public:
+    bool flag;
+    int maxTurbulenceSize(vector<int>& arr) {
+        int n=arr.size(),i=0,j=1,ans=1;                                                                            
+        while(j<n){                   // > --> taking it as true
+            if(i==j-1)                // < --> taking it as false
+                flag = (arr[j] < arr[j-1])? true : false;
+            if(arr[j] == arr[j-1]){
+                i=j++;
+                continue;
+            }
+            bool ch=false;
+            if(arr[j] < arr[j-1])
+                ch=true;
+            if(ch == flag)
+                i=j-1;
+            else
+                flag=ch;
+            ans=max(ans,j-i+1);
+            j++;
+        }
+        return ans;
+    }
+};
+
+c2:
+class Solution {
+public:
+    int maxTurbulenceSize(vector<int>& arr) 
+    {
+        if (arr.size()<2) return arr.size();
+        int ans=1;
+        int start=0;
+        int end=0;
+        int n=arr.size();
+        while(start+1<n)
+        {
+            if (arr[start+1]==arr[start])
+            {
+                start++;
+                continue;
+            }
+            end=start+1;
+            while(end+1<n && isTurbulent(arr,end))
+            {
+                end++;
+            }
+            ans=max(ans,end-start+1);
+            start=end;
+        }
+        return ans;
+
+    }
+    bool isTurbulent(vector<int>&arr,int end)
+    {
+        if ((arr[end]<arr[end+1] && arr[end]<arr[end-1])||(arr[end]>arr[end+1]&& arr[end]>arr[end-1])) return true;
+        return false;
+    }
+};
