@@ -1,0 +1,80 @@
+class Solution {
+public:
+    int find(int i, int k,vector<long long> &pre, vector<int>& nums){
+        int ind=i;
+        int j= pre.size()-1;
+        int ans= i;
+        while(i<=j){
+            int mid= i+((j-i)/2);
+            
+            if(((1LL*nums[ind]*(mid-ind+1)) - (pre[mid]- (ind==0?0:pre[ind-1]))) > k ) j= mid-1;
+            
+            else{
+                ans= mid;
+                i= mid+1;
+            }
+        }
+        return ans;
+    }
+    
+    
+    int maxFrequency(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end(), greater<int>());
+        
+        vector<long long> pre= {nums[0]};
+        for(int i=1;i<nums.size();i++) pre.push_back(nums[i]+pre.back());
+        
+        int ans=0;
+        for(int i=0;i<nums.size();i++){
+            int j= find(i,k,pre,nums);
+            ans= max(ans, j-i+1);
+        }
+        
+        return ans;
+    }
+};
+
+c2:
+
+Here is my c++ code for this problem.
+
+Complexity
+Time complexity:O(nlogn)+O(nlogn)
+
+Space complexity:O(1)
+
+Code
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        int i=1, j=nums.size(), ans=1;
+        while(i<=j){
+            int mid=i+(j-i)/2;
+            long long int sum=0, chk=1;
+            for(int k1=0; k1<mid; k1++){sum+=nums[k1]*1LL;}
+            long long int tt=1LL*nums[mid-1]*mid;
+            if(tt-sum<=k){
+                chk=-1;
+            }
+            if(chk==1){
+                int j=0;
+                for(int k1=mid; k1<nums.size(); k1++){
+                    sum-=nums[j];
+                    sum+=nums[k1];
+                    tt=1LL*nums[k1]*mid;
+                    j++;
+                    if(tt-sum<=k){chk=-1; break;}
+                }
+            }
+            if(chk==-1){
+                ans=mid;
+                i=mid+1;
+            }
+            else{
+                j=mid-1;
+            }
+        }
+        return ans;
+    }
+};
