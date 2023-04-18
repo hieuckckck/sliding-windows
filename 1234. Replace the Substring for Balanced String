@@ -1,0 +1,67 @@
+String will be balaced if and only if ,all characters will share same frequency . And we know string consist only 4 characters Q,W,E,R .
+Example
+Let string's size is 12 ,and string is s="WWQQRRRRQRQQ" then what will be the minimum window we need to replace or change. If (s-window) is in safe state then we can say ,after replacing the window we can make whole string balanced. In example RQRQ is the minimum size window ,for which (s-window) is in safe state.
+
+what (s-window) means string after deleting window .
+Parameter For Saftey ::
+If count of characters outside the window for every character is less than size of string/4.
+
+Now we just have to find minimum size of replacable window
+Please up vote if you find this useful .It will motivate me for future posts.
+
+int balancedString(string s) {
+       int n=s.size();
+       unordered_map<char,int>count;    // Used to count the repeatition of a character
+       for(int i=0;i<n;i++)
+       {
+           count[s[i]]++;               // Increment count
+       }
+       int l=0;       
+       int i=0;
+       
+       int window=n;   // The window we need to replace ,and we want to search for
+                       // a minimum window there
+       int m=n/4;    
+       
+       while(i<n)
+       {
+           count[s[i]]--;
+           while(count['Q']<=m && count['W']<=m && count['E']<=m && count['R']<=m)
+           {  
+               count[s[l]]++;
+               window=min(window,i-l+1);    // Update window size 
+               l++;                         // remove l'th character from window
+               
+               if(l>=n)                     // If it reaches to n simply back of
+                   break;
+           }
+           i++;
+       }
+       return window;
+   }
+   
+   
+   c2:
+   class Solution {
+public:
+    int balancedString(string s)
+    {
+        unordered_map<char,int> m;
+        int i=0,n=s.size(),k=n/4,ans=INT_MAX;
+        for(auto &c:s)
+        {
+            m[c]++;
+        }
+        for(int j=0;j<n;j++)
+        {
+            m[s[j]]--;
+            while(i<n&&m['Q'] <= k && m['W'] <= k && m['E'] <= k && m['R'] <= k)
+            {
+                ans=min(ans,j-i+1);
+                m[s[i++]]++;
+            }
+        }
+        return ans;
+        
+    }
+};
