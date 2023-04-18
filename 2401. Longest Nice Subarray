@@ -1,0 +1,54 @@
+class Solution {
+public:
+    int longestNiceSubarray(vector<int>& nums) {
+        int j=0;
+        int i=1;
+        int lul = nums[0];
+        int ans = 1;
+        int cnt = 0;
+        while(i<nums.size()){
+            while(j<=i&&(nums[i]&lul)){
+                lul^=nums[j++];
+                ans=max(ans,i-j+1);
+            }
+            lul|=nums[i];
+            ans=max(ans,i-j+1);
+            i++;
+        }
+        return ans;
+    }
+};
+c2:
+Calculating the longest subarray whose of xor sum in equal to the sum of the numbers in the subarray.
+
+we use the ith loop for the starting index.
+jth loop for iterating from the starting index till the last index were the condition satisfies.
+break out of the loop if not matches.
+keep track of the max length of the subarray.
+class Solution {
+public:
+    int longestNiceSubarray(vector<int>& nums) {
+        int ans=0;
+        for(int i =0;i<nums.size();i++)
+        {
+            int len =1;
+            int temp = nums[i];
+            for(int j =i;j<nums.size()-1;j++)
+            {
+                if((temp xor nums[j+1])== temp+nums[j+1])
+                {
+                    temp+=nums[j+1];
+                    len++;
+                }
+                else
+                    break;
+                    
+            }
+            ans=max(len,ans);
+        }
+        return ans;
+    }
+};
+16
+16
+
