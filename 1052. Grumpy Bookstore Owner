@@ -1,0 +1,38 @@
+Intuition & Approach
+A window of size=minutes but only considering the custumer[i] if (grumpy[i]==1)
+And then added to a sum of all the custumer[i] with (grumpy[i]==0)
+Complexity
+Time complexity:
+O(n)
+
+Space complexity:
+O(1)
+
+Code
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cus, vector<int>& grumpy, int minutes) {
+        
+        int sum =0; 
+        int start=0;
+        int ans =0;
+        for (int i=0;i<cus.size(); i++){
+            if (grumpy[i]==1){
+                sum += cus[i];
+            }
+            if (i-start+1==minutes){
+                ans = max(sum, ans);
+                if (grumpy[start]==1){
+                    sum -= cus[start];
+                }
+                start++;
+            }
+        }
+        for (int i=0; i<cus.size(); i++){
+            if (grumpy[i]==0){
+                ans += cus[i];
+            }
+        }
+        return ans;
+    }
+};
