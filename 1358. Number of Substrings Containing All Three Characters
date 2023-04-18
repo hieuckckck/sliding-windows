@@ -1,0 +1,56 @@
+Intuition:
+The problem requires us to find the number of substrings in a given string s that contain all the characters 'a', 'b', and 'c'. To solve this, we can use a sliding window approach where we maintain two pointers, start and end, and an unordered map to keep track of the count of each character in the current window. We keep expanding the window by moving the end pointer until we find a window that contains all three characters. Once we find such a window, we know that all the substrings starting from the start pointer up to the end pointer will contain all three characters. We can add the count of such substrings to our answer and move the start pointer to the right until we no longer have a valid window. We repeat this process until we reach the end of the string.
+Approach:
+Initialize an unordered map to keep track of the count of each character in the current window, count variable to store the number of valid substrings, start and end pointers, and the length of the string n.
+Move the end pointer to the right until we find a window that contains all three characters 'a', 'b', and 'c'. For this, we can use a while loop that checks if the count of each character in the map is greater than zero.
+Once we find a valid window, we know that all the substrings starting from the start pointer up to the end pointer will contain all three characters. We can add the count of such substrings to our answer by adding n - end to the count variable. This is because we can form n - end substrings from the current end pointer to the end of the string.
+Move the start pointer to the right until we no longer have a valid window. We do this by decrementing the count of the character at the start pointer in the map and moving the start pointer to the right until we no longer have all three characters in the window.
+Repeat steps 2 to 4 until we reach the end of the string.
+Return the count variable.
+Complexity:
+Time complexity: O(n) where n is the length of the string. We visit each character of the string at most twice, once by the end pointer and once by the start pointer.
+Space complexity: O(1) since the size of the unordered map is constant at 3 (for the characters 'a', 'b', and 'c').
+Code
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        unordered_map<char,int> map;
+        int count = 0, start = 0, end = 0;
+        int n = s.size();
+        while(end<n){
+            map[s[end]]++;
+            while( map['a'] && map['b'] && map['c'] ){
+                count+=n-end;
+                map[s[start]]--;
+                start++;
+            }
+            end++;
+        }
+        return count;
+    }
+};
+
+C2:easiest 2-pointer approach
+
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int i=0;int j=0;
+        map<char,int>m;
+        int ans=0;
+        while(i<s.length()&&j<s.length()){
+           m[s[j]]++;
+           label:
+            if(m['a']>=1&&m['b']>=1&&m['c']>=1)
+            {
+                ans+=(s.length()-j);
+                m[s[i]]--;
+                i++;
+                goto label;
+            }
+            j++;
+        }
+        return ans;
+
+    }
+};
