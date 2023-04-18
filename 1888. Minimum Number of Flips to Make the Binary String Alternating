@@ -1,0 +1,77 @@
+C++ solution ✔O(N) time and O(1) space
+shivam565
+100 Days Badge 2022
+64
+Apr 04, 2023
+what is given to us are two operations
+
+operation 1: Remove the character at the start of the string s and append it to the end of the string.
+operation 2 : Pick any character in s and flip its value.
+observation from operation 1 & 2: Either we need to select a subarray that is starting from index 0, append it to the end of string OR flip the bit of any character.
+
+image
+
+as you can see in the image, what i am going to do is to select any subarray that is starting from 0 and ending on each index i (0 to n-1) and append to to the end of string.
+
+So total cost = cost to make string[0,i] in alternating order + cost to make string[i+1,n-1] in alternating order.
+but do you think it is enough 🤔?
+.
+.
+.
+.
+.
+No, Let's find the reason.
+what if the length of the string [i+1,n-1] is odd
+
+Let's take one example.
+image
+
+In that case if i append s1 at the end of s2 the final string will be 0 1 0 1 0 0 1 0 which is not in the alternating order.
+
+so what to do ??
+.
+.
+.
+we can make a check if the s2 length is odd we need to convert s1 in the different order.
+
+what i mean by different order is, if s2 is in the order of 0101.. then s1 will be in the order of 1010... and vice versa also and finally take the minimum value for the answer.
+
+Here is the code for it
+
+class Solution {
+public:
+    int minFlips(string s) {
+        int n = s.size();
+        int ans = n;
+        int s01 = 0,s10 = 0;
+        for(int i = 0 ; i < n ; i++){
+            if(i%2 == (s[i]-'0')) s10++; 
+            else s01++;
+        }
+        /**
+          * c01 and c10 is the cost to make string[0,i] in 0101 and 1010 order respectively.
+          **/
+        
+        /**
+          * s01 and s10 is the cost to make string[i+1,n-1] in 0101 and 1010 order respectively.
+          **/
+        
+        int c01 = 0,c10 = 0;
+        for(int i = 0 ; i < n ; i++){
+            if((n-i)%2 == 0) ans = min(ans,min(s10+c10,s01+c01));
+            else ans = min(ans,min(s10+c01,s01+c10));
+            if(s[i] == '0') s10--;
+            else s01--;
+            swap(s10,s01);
+            
+            if(i%2 == 0){
+                if(s[i] == '0') c10++;
+                else c01++;
+            }else{
+                if(s[i] == '0') c01++;
+                else c10++;
+            }
+        }
+        return ans;
+    }
+};
