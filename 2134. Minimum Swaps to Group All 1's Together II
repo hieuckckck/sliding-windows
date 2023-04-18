@@ -1,0 +1,95 @@
+Clean C++ code || Nicely explained Approach with comments.
+binayKr
+Annual Badge 2022
+204
+Mar 17, 2023
+Intuition
+If we calculate the total no. of ones and then take a window of length equals to "no. of ones" and keep track of no of zeros in that window...the window containing minimum no of zeros will be our answer.
+Approach
+-> Push all the elements from left to right in nums sequenceially except the last element.
+-> We take the double the array length so that the array seems like a round circle.
+-> Count all the ones.
+-> Count no. of zeros in the first window of "no. of ones" sized window.
+-> Traverse on the whole array (as if we're looping in a circle).
+-> Maintain a min_zeros variable that holds the information of window containing minimum no of zeros.
+
+Complexity
+Time complexity: O(N)
+
+Space complexity: O(N)
+
+C++ Code
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        int n = nums.size(), ones = 0, zeros = 0;
+        if(n<=2) return 0;
+        
+        //push all the elements from left to right in nums sequenceially except the last element.
+        //we take the double the array length so that the array seems like a round circle.
+        for(int i=0; i<n-1; i++) nums.push_back(nums[i]);
+        
+        //counting all the ones here.
+        for(int i=0; i<n; i++) ones += (nums[i]==1);
+        
+        //counting no. of zeros in the first window of 'ones' window length.
+        for(int i=0; i<ones; i++) zeros += (nums[i]==0);
+        
+        int l = 0, r = ones-1, min_zeros = zeros;
+        
+        //traverse on the whole array (as if we're looping in a circle)
+        while(r<2*n-1)
+        {
+            zeros += (nums[++r]==0);
+            zeros -= (nums[l++]==0);
+            min_zeros = min(min_zeros, zeros);
+        }
+        
+        //the window containing minimum no of zeros will be our answer
+        return min_zeros;
+    }
+};
+c2:
+
+
+Easy understanding C++ code with approach
+venkatasaitanish
+1047
+Jan 10, 2022
+We are given a binary circular array (0s and 1s) and we are required to group all the 1s together with minimum no. of swaps.
+
+First we count the total no. of 1s in the given array. If the no. of 1s in the array is less than or equal to 1, this means all the 1s are grouped together, so no swaps are required and we return 0.
+
+We are required to minimise the no. of swaps, so we find the sub array having maximum no. of ones in all sub arrays with length equal to total no. of ones. This makes the no. of 0s in the sub array low and swaps are reduced.
+So now the answer is no. of 0s present in the subarray we found as we have to swap those 0s with the remaining 1s. i.e, the answer is no. of zeroes in the sub array found = (total length of sub array - ones in that sub array).
+For finding the sub array having maximum ones of length k equal to total no. of ones , it looks like a fixed length sliding window problem which could be solved in O(n) time.
+
+But now the question also mentions a specific point that it is a circular array. So the last element in the given array is followed with the first element. So we have n sub arrays for any length (n represents no. of elements in the given array). So while sliding the window, now we iterate upto (n + sub array length) to cover all sub arrays in the circular pattern.
+
+Time Complexity: O(n), Space Complexity: O(1)
+
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        int n = nums.size();
+        int ones = 0; // total no. of ones
+        for(int i=0;i<n;i++){
+            if(nums[i]==1) ones++;
+        }
+        if(ones<=1) return 0;
+        
+        int k = ones; // sliding window length
+        int maxOnes = 0; // maxOnes in sub array of length k 
+        int cnt = 0;
+        for(int i=0;i<k;i++){
+            if(nums[i]==1) cnt++;
+        }
+        maxOnes = cnt;
+        for(int i=k;i<n+k;i++){
+            if(nums[i-k]==1) cnt--; // if element removing from window is 1, then decrease count.
+            if(nums[i%n]==1) cnt++; // if element adding to window is 1, then increase count.
+            maxOnes = max(maxOnes,cnt); // maintaing maxOnes for all sub arrays of length k.
+        }
+        return(k - maxOnes); // (total length of subarray - ones in the sub array found) 
+    }
+};
