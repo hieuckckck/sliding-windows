@@ -1,0 +1,129 @@
+class Solution {
+    bool good(unordered_map<char, int> &w, unordered_map<char, int> &m) {
+        if(w.size() == 1) return true;
+        if(w.size() > 2) return false;
+        char a = '#', b;
+        for(auto p : w) {
+            a == '#' ? a = p.first : b = p.first;
+        }
+        if(w[a] == 1 && m.find(b) != m.end() || w[b] == 1 && (m.find(a) != m.end())) return true;
+        return false;
+    }
+public:
+    int maxRepOpt1(string text) {
+        unordered_map<char, int> m, w;
+        for(char c : text) m[c]++;
+
+        int n = text.size(), i = 0, ans = 0;
+        for(int j=0; j<n; j++) {
+            w[text[j]]++;
+            m[text[j]]--;
+            if(!m[text[j]]) m.erase(text[j]);
+            
+            while(!good(w, m)) {
+                w[text[i]]--;
+                m[text[i]]++;
+                if(!w[text[i]]) w.erase(text[i]);
+                i++;
+            }
+            ans = max(ans, j - i + 1);
+        }
+        return ans;
+    }
+};
+
+c2:
+Intuition
+Here I have made an array that will store the maximum length with consecutive characters such that I can have one character as a defaulter.In the end if I have total number of that character greater than my max_length with one defaulter it means that I can increment it by 1 else I have to return without incrementing.
+
+NOTE->
+I have not included the defaulter character count while storing max_length in array it will be done in end If we have availability of character.
+
+Approach
+To get the max_count with one defaulter I have achieved it using a flag variable that will indicate wheather I have taken defaulter or not .
+
+Code
+class Solution {
+public:
+    int maxRepOpt1(string text) {
+        vector<int> count_arr(26,0);
+        vector<int> total(26,0);
+        for(auto i: text){
+            total[i-'a']++;
+        }
+
+        int i=0;
+
+        int n=text.size();
+        
+        while(i<n){
+            int count=0; //intital count is zero 
+            char ch=text[i];
+            bool flag=true;
+            int middle_index=-1;  //middle_index will be the defaulter character index
+            while(i<n && (text[i]==ch || flag)){
+                if(text[i]==ch){  //if text is same incrementin count 
+                    i++;
+                    count++;
+
+                }
+                else{        //if not storing the defaulter address and making flag variable false
+                    middle_index=i;
+                    flag=false;
+                    i++;
+                }
+
+            }
+
+            count_arr[ch-'a']=max(count,count_arr[ch-'a']); //updating the count array 
+
+
+
+            
+
+            if(middle_index==-1){ //if middle_index is not updated means we are on the last index
+               break;
+            }
+            else{ //we will start the evaluation from the defaulter as we need the count of all the alphabets
+                i=middle_index;
+            }
+            
+        }
+
+        int ans=1;
+        for(int i=0;i<26;i++){
+            int curr_ans=count_arr[i];
+            if(curr_ans<total[i])curr_ans++;  //if we have availablity of character we will increment the curr_char max_count else the answer will be same as of max_count 
+            ans=max(ans,curr_ans);
+        }
+
+
+        return ans;
+    }
+};
+
+c3:
+Complexity
+Time complexity: O(N * N)
+Space complexity: O(1)
+Code
+class Solution {
+public:
+    int maxRepOpt1(string text) {
+        int freq[26] = {0};
+        for(char c : text) freq[c - 'a']++;
+
+        int ans = 0, n = text.size();
+        for(int i = 0; i < n; i++) {
+            int j = i, diff = 0, cnt = 0;
+            while(j < n && (text[j] == text[i] || diff == 0) && cnt < freq[text[i] - 'a']){
+                if(text[j] != text[i]) diff++;
+                cnt++;
+                j++;
+            }
+            if(cnt < freq[text[i] - 'a'] && diff == 0) cnt++;
+            ans = max(ans, cnt);
+        }
+        return ans;
+    }
+};
