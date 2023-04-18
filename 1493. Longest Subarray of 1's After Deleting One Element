@@ -1,0 +1,63 @@
+Easy sliding window || intuitive || checkatleastOnce
+recursive_coder
+100 Days Badge 2022
+59
+Jan 17, 2023
+logic :
+
+we have to give every zero a chance to show what max length sub array containing 1 this zero can produce when removed..... using brutforce with couple of loops it will take >= o(n2) but using sliding window we can reduce the complexity to <= o(nlogn)
+keep window expanding until no of zeros is 1 if cnt of zeros becomes 2 remove all elements in window till 1st zero , keep updating ans in each iteration to get the max result.
+
+
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        
+        int n = nums.size(); // size of nums
+        int i = 0; // sliding window starting point
+        int ans = 0;  // ans variable stores ans
+        int cnt_0 = 0; // keeps track of no of zeros in current window
+        int cumm_sum = 0; // ** cumm_sum of sliding window
+        
+        for(int j = 0 ; j < n ; j++){
+            
+            if(nums[j] == 1)
+              cumm_sum++; // adding in window
+            else{
+                cnt_0++;
+            }
+            while(cnt_0 > 1){
+                  cumm_sum = cumm_sum - nums[i]; // removing from window
+                  if(nums[i] == 0){
+                      cnt_0--;
+                  }
+                 i++;
+            }
+            ans = max(ans,cumm_sum);
+        }
+        if( ans == n)
+            ans--;
+        
+        return ans;
+    }
+};
+
+c2:
+Simple Approach || O(N) time , O(1) space || C++
+chaitanyya
+25
+Mar 17, 2023
+we are taking two pointers here and iterating over an array and since we should delete one element the count should be less than 1. whenever we'll get count greater than 1 we reduce count and we return max length between j and i .
+
+class Solution {
+public:
+    int longestSubarray(vector<int>& A) {
+        int i = 0, j = 0, n = A.size(), count = 0, ans = 0;
+        for (; j < n; ++j) {
+            count += A[j] == 0;
+            while (count > 1) count -= A[i++] == 0;
+            ans = max(ans, j - i);
+        }
+        return ans;
+    }
+};
