@@ -1,0 +1,65 @@
+	class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int ans = 0, i = 0, j = 0, n = nums.size(),x = 0,a = 0, b = 0;
+        while(j<n){
+            a = 0, b = 0;
+            while(j<n && (x+(nums[j]&1) <= k)){
+                x += (nums[j]&1);
+                if(x == k){
+                    a++;
+                }
+                j++;
+            }
+            while(i<n && x == k){
+                if(x==k){
+                    b++;
+                }
+                x -= (nums[i]&1);
+                i++;
+            }
+            ans += a*b;
+        }
+        return ans;
+    }
+};
+C2:
+Intuition:
+The problem requires finding the number of subarrays having exactly k odd integers. We can solve the problem using sliding window technique where we maintain a window of contiguous subarray and slide it from left to right. While sliding the window, we keep track of the number of odd integers inside the window and count the number of subarrays having exactly k odd integers.
+
+Approach:
+We initialize two pointers, start and end, to the first element of the array. We also initialize count to zero and ans to zero. We then traverse the array using the end pointer and for each element, we increment count if it is odd. We then slide the window to the right until count becomes equal to k. At each step, we update ans with the number of subarrays having exactly k odd integers. Finally, we return ans.
+
+To find the number of subarrays having exactly k odd integers, we subtract the number of subarrays having less than k odd integers from the number of subarrays having at most k-1 odd integers. We can reuse the same subArray function to compute both.
+
+Complexity:
+Time complexity: O(n), where n is the size of the array. We traverse the array only once.
+Space complexity: O(1), as we use constant extra space.
+Code
+class Solution {
+public:
+    int subArray(vector<int>& nums, int k) {
+        int count = 0, ans = 0, start = 0, end = 0;
+        int n = nums.size();
+        while(end<n){
+            if(nums[end]%2==1){
+                count++;
+            }
+            while(count>k){
+                if(nums[start]%2==1){
+                    count--;
+                }
+                start++;
+            }
+            ans += end-start+1;
+            end++;
+        }
+        return ans;
+    }
+    int numberOfSubarrays(vector<int>& nums, int k) {
+      return subArray(nums, k) - subArray(nums, k - 1);
+    }
+};
+4
+4
+
