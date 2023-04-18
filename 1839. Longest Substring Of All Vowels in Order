@@ -1,0 +1,83 @@
+
+class Solution {
+public:
+
+    int longestBeautifulSubstring(string w) {
+        
+      int n = w.size();
+      vector<pair<char,int>>vp;
+      char curr = w[0];
+      int cnt = 0;
+      for(int i = 0;i<n;)
+      {
+        while(w[i]==curr && i < n)
+        {
+          i++; cnt++;
+        }
+        vp.push_back({curr,cnt});
+        curr = w[i];
+        cnt = 0;
+      }
+      int maxi = 0;
+      n = vp.size();
+
+      if(n < 5) return 0;
+
+      string t;
+      string s = "aeiou";
+      cnt = 0;
+      int i = 0, j = 0;
+
+      for(;j<5;++j)
+      {
+        t.push_back(vp[j].first);
+        cnt += vp[j].second;
+      }
+
+      if(t==s) maxi = max(maxi,cnt);
+    
+      for(;j<n;++j)
+      {
+        t.erase(t.begin());
+        t.push_back(vp[j].first);
+        cnt-= vp[i].second;
+        i++;
+        cnt+=vp[j].second;
+        if(t==s) maxi = max(maxi,cnt); 
+      }
+      
+      return maxi;
+    }
+};
+
+c2:
+Approach
+Two Pointer Approach:
+
+count variable is looking for the all vowels in current substring window.
+The idea behind count variable is, it counts all the "<" operations. if it equals 5 it implies we got all the vowels.
+if sorted sequence breaks we reset our first pointer "p" as well as count variable i.e. we reset our current window.
+Complexity
+Time complexity: O(n)
+
+Space complexity: O(1)
+
+Code
+class Solution {
+public:
+    int longestBeautifulSubstring(string word) {
+        int ans = 0, p = 0, count = 1;
+        
+        for(int i = 1; i < word.length(); i++) {
+
+            if(word[i-1] < word[i])  count++;
+            
+            else if(word[i-1] > word[i])
+                p = i, count = 1;
+            
+            if(count == 5) ans = max(ans,i-p+1);
+        }
+
+        return ans;
+    }
+};
