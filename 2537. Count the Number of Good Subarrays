@@ -1,0 +1,25 @@
+C++ || SLIDING WINDOW || MAP || EASY TO UNDERSTAND || SHORT & SWEET
+New_ganesh
+653
+Apr 14, 2023
+class Solution {
+public:
+    long long countGood(vector<int>& nums, int k) {
+        long long int ans = 0;
+        unordered_map<int,int> v;
+        int i = 0, j = 0, cnt = 0,n=nums.size();
+        while(i<n){
+            while(j<n&&cnt<k){//no of possible good pairs
+                v[nums[j]]++;
+                cnt += v[nums[j]]-1;
+                j++;
+            }
+            if(cnt<k)break;
+            ans += (n-j+1);//after index [i,jtilln] (j to n) all good subarray
+            v[nums[i]]--;
+            cnt -= v[nums[i]];
+            i++;
+        }
+        return ans;
+    }
+};
